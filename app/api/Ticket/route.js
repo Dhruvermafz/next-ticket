@@ -6,9 +6,12 @@ export async function GET() {
     const tickets = await Ticket.find();
 
     return NextResponse.json({ tickets }, { status: 200 });
-  } catch (err) {
-    console.log(err);
-    return NextResponse.json({ message: "Error", err }, { status: 500 });
+  } catch (error) {
+    console.error("GET Error:", error);
+    return NextResponse.json(
+      { message: "Error fetching tickets", error },
+      { status: 500 }
+    );
   }
 }
 
@@ -17,11 +20,17 @@ export async function POST(req) {
     const body = await req.json();
     const ticketData = body.formData;
 
-    await Ticket.create(ticketData);
+    const createdTicket = await Ticket.create(ticketData);
 
-    return NextResponse.json({ message: "Ticket Created" }, { status: 201 });
-  } catch (err) {
-    console.log(err);
-    return NextResponse.json({ message: "Error", err }, { status: 500 });
+    return NextResponse.json(
+      { ticket: createdTicket, message: "Ticket created" },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("POST Error:", error);
+    return NextResponse.json(
+      { message: "Error creating ticket", error },
+      { status: 500 }
+    );
   }
 }
