@@ -18,7 +18,13 @@ const getTickets = async () => {
 };
 
 const Dashboard = async () => {
-  const { tickets } = await getTickets();
+  const data = await getTickets();
+
+  if (!data?.tickets) {
+    return <p>No tickets</p>;
+  }
+
+  const tickets = data.tickets;
 
   const uniqueCategories = [
     ...new Set(tickets?.map(({ category }) => category)),
